@@ -6,17 +6,13 @@ This Roblox wrapper was designed for new and beginner Linux users to quickly get
 
 Download latest release from https://github.com/msmalik681/Maliks-Linux-Roblox-Wrapper/releases the file "Maliks_Roblox_Wrapper.sh" and make it executable from terminal in the same directory run "chmod +x Maliks_Roblox_Wrapper.sh" in most modern distros you can just right click on the file select properties then permissions and check the box to allow executing as program.
 
-Once the file is executable just run it. Open a terminal window then drag and drop the file in there then press return to run it or open a terminal in the same directory and run ./Maliks_Roblox_Wrapper.sh.
+Once the file is executable just run it. Open a terminal window then drag and drop the file in there then press return to run it or open a terminal in the same directory and run "./Maliks_Roblox_Wrapper.sh" .
 
-You will be asked what distro you are using you will have to identify this before you proceed there are hundreds of Linux distros Ubuntu(Debian) is the most common. The script will try to guess your distro and it should be advised what distro yours seems like before you are given the option to pick one. If your not sure maybe check the project page for the distro you are using.
-
-During the install you will be asked if you want to install DXVK I recommend installing without it if everything is working you do not need it. but if Roblox will not start or runs really bad run the setup again but choose to install it this time.
-
-Once Roblox is installed and you press the green button to exit the graphical setup this script will hang press return to end it or just close the terminal and you are done.
+During the install you will be asked if you want to install or uninstall DXVK I recommend installing without it if everything is working you do not need it. but if Roblox will not start or runs really bad run the setup again but choose to install it this time.
 
 ### Roblox Studio ###
 
-Studio can only be run after Roblox is installed it does not seem very stable I have enabled Vulkan as the default graphics api as it is the most stable. If you having trouble with this you could try grapejuice.
+Studio can only be run after Roblox is installed it does not seem very stable I have enabled Vulkan as the default graphics api as it is the most stable. If you having trouble with this you could try grapejuice. If you can not run Roblox without DXVK then studio will not work.
 
 ### Support ###
 

@@ -7,9 +7,9 @@
 full_setup () {
 
 # install "lib32-gnutls" if missing.
-if ! $distro_check lib32-gnutls > /dev/null ;
+if [ $distro_guess = "Arch" ] && ! $distro_check lib32-gnutls > /dev/null ;
 then
-  sudo $distro_install lib32-gnutls;
+  	 sudo $distro_install lib32-gnutls;
 fi
 
 # install "xdg-utils" if missing.
@@ -45,7 +45,8 @@ fi
 
 # set custom directory as default for wine to use
 export WINEPREFIX=~/.wine-roblox-malik
-WINEPREFIX=~/.wine-roblox-malik wineboot -u -i
+export WINEDEBUG=-all
+WINEPREFIX=~/.wine-roblox-malik wineboot -i
 
 # Install or uninstall DXVK
 wineserver -k
@@ -154,20 +155,20 @@ fi
 xdg-mime default "roblox-malik.desktop" x-scheme-handler/roblox-player
 
 # make desktop entry for roblox launcher.
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-malik\nExec=bash -c \"WINEPREFIX=~/.wine-roblox-malik WINEESYNC=1 WINEFSYNC=1 ~/.wine-roblox-malik/wine-tkg-staging-fsync-git-6.16.r0.g931daeff/bin/wine \\\"\$(find ~/.wine-roblox-malik/drive_c/users -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U\"\nMimeType=x-scheme-handler/roblox-player;\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > ~/.local/share/applications/roblox-malik.desktop
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-malik\nExec=bash -c \"WINEPREFIX=~/.wine-roblox-malik WINEESYNC=1 WINEFSYNC=1 \"~/.wine-roblox-malik/wine-tkg-staging-fsync-git-6.16.r0.g931daeff/bin/wine\" \\\"\$(find ~/'.wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions' -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U\"\nMimeType=x-scheme-handler/roblox-player;\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > ~/.local/share/applications/roblox-malik.desktop
 
 # Install Roblox through wine if missing.
-if [[ $(find ~/.wine-roblox-malik/drive_c/users -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*') == *.exe ]];
+if [[ $(find ~/".wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*') == *.exe ]];
 then
 echo "Roblox is installed!"
 else
 echo "Need to Install Roblox!"
-~/.wine-roblox-malik/wine-tkg-staging-fsync-git-6.16.r0.g931daeff/bin/wine ~/.wine-roblox-malik/RobloxPlayerLauncher.exe
+wine ~/.wine-roblox-malik/RobloxPlayerLauncher.exe
 fi
 
 echo " " 
 # let user know their system has just been pimped :)
-read -p "Setup complete remember to reset settings on chrome if no option to open with roblox-malik . . ."
+echo "Setup complete remember to reset settings on chrome if no option to open with roblox-malik . . ."
 
 }
 
@@ -176,82 +177,60 @@ read -p "Setup complete remember to reset settings on chrome if no option to ope
 ########################      SETUP        ######################################
 #################################################################################
 
-
-if cat /etc/os-release | grep -io "fedora" > /dev/null;
-then
-distro_guess="Fedora"
-elif cat /etc/os-release | grep -io "debian" > /dev/null || cat /etc/os-release | grep -io "ubuntu" > /dev/null;
+which apt >/dev/null 2>&1
+if [ $? -eq 0 ]
 then
 distro_guess="Debian"
-elif cat /etc/os-release | grep -io "arch" > /dev/null;
+distro_check="dpkg -l"
+distro_install="apt install"
+fi
+
+which yum >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+distro_guess="Fedora"
+distro_check="rpm -q"
+distro_install="yum install"
+fi
+
+which pacman >/dev/null 2>&1
+if [ $? -eq 0 ]
 then
 distro_guess="Arch"
+distro_check="pacman -Qs"
+distro_install="pacman -S"
 fi
 
-if ! test -z $distro_guess;
+if test -z $distro_guess;
 then
-distro_guess="Your Distro looks like $distro_guess. "
-#echo "$distro_guess"
+echo "This Linux distro is not supported sorry. Now aborting."
+exit
 fi
 
-PS3=$distro_guess"Choose your Distro:"
-distros=("Debian" "Arch" "Fedora" "Roblox_Studio" "Exit")
+PS3="Please make a selection:"
+distros=("Install Roblox" "Install Roblox Studio" "Exit")
 select fav in "${distros[@]}"; do
     case $fav in
 
 #################################################################################
-########################      DEBIAN        #####################################
+########################      Install Roblox        #############################
 #################################################################################
 
-        "Debian")
+        "Install Roblox")
 
-read -p "Roblox setup for Debian Linux. Close all web browsers then press any key to start . . ."
-
-distro_check="dpkg -l"
-distro_install="apt install"
+read -p "Roblox setup for $distro_guess Linux. Close all web browsers then press Return key to start . . ."
 
 full_setup
 
 		exit
 		;;
 
-#################################################################################
-########################      ARCH        #######################################
-#################################################################################
-
-        "Arch")
-
-read -p "Roblox setup for Arch Linux. Close all web browsers then press any key to start . . ."	   
-
-distro_check="pacman -Qs"
-distro_install="pacman -S"
-
-full_setup
-
-		exit
-		;;
 
 #################################################################################
-########################      FEDORA        #####################################
-#################################################################################
-
-        "Fedora")
-
-read -p "Roblox setup for Fedora Linux. Close all web browsers then press any key to start . . ."
-
-distro_check="rpm -q"
-distro_install="yum install"
-
-full_setup
-
-		exit
-		;;
-	    
-#################################################################################
-########################      Roblox_Studio        ##############################
+########################      Install Roblox Studio        ######################
 #################################################################################
 	    
-	    "Roblox_Studio")
+	    "Install Roblox Studio")
 	    
 if [ ! -d ~/.wine-roblox-malik ];
 then
@@ -269,21 +248,22 @@ else
 
 
 	
-echo -e "[Desktop Entry]\nName=Roblox Studio Malik\nComment=msmalik681\nExec=bash -c \"WINEPREFIX=~/.wine-roblox-malik/studio-malik WINEESYNC=1 WINEFSYNC=1 ~/.wine-roblox-malik/wine-tkg-staging-fsync-git-6.16.r0.g931daeff/bin/wine \\\"\$(find ~/.wine-roblox-malik/drive_c/users -name 'RobloxStudioLauncherBeta.exe' -not -path '*/Temp/*' -print -quit)\\\"\"\nIcon=2052_RobloxStudioLauncherBeta.0\nTerminal=false\nType=Application\nCategories=Wine;" > ~/Desktop/'Roblox Studio Malik.desktop'
+echo -e "[Desktop Entry]\nName=Roblox Studio Malik\nComment=msmalik681\nExec=bash -c \"WINEPREFIX=~/.wine-roblox-malik/studio-malik WINEESYNC=1 WINEFSYNC=1 ~/'.wine-roblox-malik/wine-tkg-staging-fsync-git-6.16.r0.g931daeff/bin/wine' ~/'.wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions/RobloxStudioLauncherBeta.exe'\"\nIcon=2052_RobloxStudioLauncherBeta.0\nTerminal=false\nType=Application\nCategories=Wine;" > ~/Desktop/'Roblox Studio Malik.desktop'
 	chmod +x  ~/Desktop/'Roblox Studio Malik.desktop'
 	
-	read -p "Roblox Studio shotcut made on Desktop. Now Launching Studio press any key to start . . ."
+	read -p "Roblox Studio shotcut made on Desktop. Now Launching Studio press Return key to start . . ."
 		
-		WINEPREFIX=~/.wine-roblox-malik/studio-malik WINEESYNC=1 WINEFSYNC=1 ~/.wine-roblox-malik/wine-tkg-staging-fsync-git-6.16.r0.g931daeff/bin/wine "$(find ~/.wine-roblox-malik/drive_c/users -name 'RobloxStudioLauncherBeta.exe' -not -path '*/Temp/*' -print -quit)"
+		WINEPREFIX=~/.wine-roblox-malik/studio-malik WINEDEBUG=-all WINEESYNC=1 WINEFSYNC=1 ~/".wine-roblox-malik/wine-tkg-staging-fsync-git-6.16.r0.g931daeff/bin/wine" ~/".wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions/RobloxStudioLauncherBeta.exe"
 
 fi
+	exit
 	    ;;
 
 
 	"Exit")
 	exit
 	    ;;
-        *) echo "Invalid option $REPLY. Valid options are 1,2,3,4 and 5.";;
+        *) echo "Invalid selection $REPLY. Valid selections are 1,2 and 3.";;
     esac
 done
 exit
