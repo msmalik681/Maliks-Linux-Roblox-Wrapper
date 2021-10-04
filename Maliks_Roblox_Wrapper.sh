@@ -36,6 +36,9 @@ then
 	sed -i '/roblox/d' ~/.config/mimeapps.list
 fi
 
+# add my roblox launcher to xdg list.
+xdg-mime default "roblox-malik.desktop" x-scheme-handler/roblox-player
+
 # make custom directory if missing
 if [ ! -d ~/.wine-roblox-malik ];
 then
@@ -132,7 +135,7 @@ then
 		cd ~/.wine-roblox-malik
 		if [ ! -f ~/.wine-roblox-malik/wine-tkg-staging-fsync-git-6.16.r0.g931daeff.tar.xz ];
 		then
-			wget --no-check-certificate "https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21628&authkey=AP2ynol00vhp_Oc" -O wine-tkg-staging-fsync-git-6.16.r0.g931daeff.tar.xz
+			wget --no-check-certificate "https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21628&authkey=AN73mkW13cgxtL8" -O wine-tkg-staging-fsync-git-6.16.r0.g931daeff.tar.xz
 		fi
 	
 		if md5sum ~/.wine-roblox-malik/wine-tkg-staging-fsync-git-6.16.r0.g931daeff.tar.xz | grep -i 9f3096fa1928a5b189430df14b34f601 > /dev/null;
@@ -150,9 +153,6 @@ if [ ! -f ~/.wine-roblox-malik/RobloxPlayerLauncher.exe ];
 then
 	wget -O ~/.wine-roblox-malik/RobloxPlayerLauncher.exe https://setup.rbxcdn.com/RobloxPlayerLauncher.exe
 fi
-
-# add my roblox launcher to xdg list.
-xdg-mime default "roblox-malik.desktop" x-scheme-handler/roblox-player
 
 # make desktop entry for roblox launcher.
 echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-malik\nExec=bash -c \"WINEPREFIX=~/.wine-roblox-malik WINEESYNC=1 WINEFSYNC=1 \"~/.wine-roblox-malik/wine-tkg-staging-fsync-git-6.16.r0.g931daeff/bin/wine\" \\\"\$(find ~/'.wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions' -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U\"\nMimeType=x-scheme-handler/roblox-player;\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > ~/.local/share/applications/roblox-malik.desktop
@@ -199,6 +199,14 @@ then
 distro_guess="Arch"
 distro_check="pacman -Qs"
 distro_install="pacman -S"
+fi
+
+which zypper >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+distro_guess="OpenSUSE"
+distro_check="zypper search -i"
+distro_install="zypper install"
 fi
 
 if test -z $distro_guess;
