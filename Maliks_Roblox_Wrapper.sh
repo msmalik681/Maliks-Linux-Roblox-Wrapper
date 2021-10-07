@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #clear any older versions
-if [[ ! $(find ~/".wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*') == *.exe ]];
+if [ -d ~/.wine-roblox-malik ] && [[ ! $(find ~/".wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*') == *.exe ]];
 then
 rm -rf ~/.wine-roblox-malik
 fi
