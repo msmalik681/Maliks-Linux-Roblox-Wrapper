@@ -313,6 +313,8 @@ xdg-mime default "roblox-studio-malik.desktop" application/x-roblox-rbxlx
 #create desktop entry for studio
 echo -e "[Desktop Entry]\nName=Roblox-Studio-Malik\nExec=xdg-open https://www.roblox.com/login/return-to-studio\nIcon=A67C_RobloxStudioLauncherBeta.0\nTerminal=false\nType=Application\nName[en_GB]=Roblox-Studio-Malik" > ~/Desktop/'Roblox Studio Malik.desktop'
 
+chmod +x ~/Desktop/'Roblox Studio Malik.desktop'
+
 #create studio desktop file for xdg-open
 echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-studio-malik\nExec=bash -c \"export WINEPREFIX=~/.wine-roblox-malik/studio-malik && export WINEESYNC=1 && export WINEFSYNC=1 && \"~/.wine-roblox-malik/$WINE_NAME/bin/wine\" \\\"\$(find ~/'.wine-roblox-malik/studio-malik/drive_c/users/'$USER/AppData/Local/Roblox/Versions -name 'RobloxStudioLauncherBeta.exe' -not -path '*/Temp/*')\\\" %U $FPS\"\nIcon=A67C_RobloxStudioLauncherBeta.0\nMimeType=x-scheme-handler/roblox-studio;application/x-roblox-rbxl;application/x-roblox-rbxlx\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > ~/.local/share/applications/roblox-studio-malik.desktop
 
