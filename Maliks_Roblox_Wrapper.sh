@@ -4,7 +4,8 @@
 ########################      FULL_SETUP    #####################################
 #################################################################################
 
-full_setup () {
+full_setup ()
+{
 
 # install "lib32-gnutls" if missing.
 if [ $distro_guess = "Arch" ] && ! $distro_check lib32-gnutls > /dev/null ;
@@ -152,7 +153,7 @@ api="{\"FFlagDebugGraphicsPreferOpenGL\": true, \"DFFlagClientVisualEffectRemote
 break
 ;;
 "DirectX11")
-api="{\"FFlagDebugGraphicsPreferVulkan\": true, \"DFFlagClientVisualEffectRemote\": false}"
+api="{\"FFlagDebugGraphicsPreferD3D11\": true, \"DFFlagClientVisualEffectRemote\": false}"
 break
 ;;
 "DirectX9")
@@ -168,11 +169,84 @@ if [ ! -d ~/.wine-roblox-malik/ClientSettings ]; then mkdir ~/.wine-roblox-malik
 echo -e "$api" > ~/.wine-roblox-malik/ClientSettings/ClientAppSettings.json
 
 cp -r ~/.wine-roblox-malik/ClientSettings "$(find ~/'.wine-roblox-malik/drive_c/users/'$USER -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} \;)"
-exit
+
+
+# Install or uninstall DXVK
+if [ $REPLY == "3" ] || [ $REPLY == "4" ];
+then
+	wineserver -k
+	if [ -f ~/.wine-roblox-malik/dosdevices/c:/windows/syswow64/d3d11.dll.old ];
+	then
+		read -p "Do you want to uninstall DXVK (y/n)?"
+		if [[ $REPLY =~ ^[Yy]$ ]]
+		then
+		
+		for i in {1..5}
+		do
+	
+			if [ $i == 5 ];
+			then 
+				echo "error: failed to download dxvk-1.9.1.tar.gz"
+				exit
+			fi
+	
+			cd ~/.wine-roblox-malik
+			if [ ! -f ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz ];
+			then
+				wget --no-check-certificate "https://github.com/doitsujin/dxvk/releases/download/v1.9.1/dxvk-1.9.1.tar.gz" -O dxvk-1.9.1.tar.gz
+			fi
+		
+			if md5sum ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz | grep -i 09058abcd44d72a7555fac0a2254351a > /dev/null;
+			then 
+				tar -xf ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz
+				break
+			else 
+				rm ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz
+			fi
+		done
+		
+		 bash ~/.wine-roblox-malik/dxvk-1.9.1/setup_dxvk.sh uninstall
+		else
+		 echo "Skipping DXVK!"
+		fi
+	else
+		read -p "Do you want to install DXVK (y/n)?"
+		if [[ $REPLY =~ ^[Yy]$ ]]
+		then
+		for i in {1..5}
+		do
+	
+			if [ $i == 5 ];
+			then 
+				echo "error: failed to download dxvk-1.9.1.tar.gz"
+				exit
+			fi
+	
+			cd ~/.wine-roblox-malik
+			if [ ! -f ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz ];
+			then
+				wget --no-check-certificate "https://github.com/doitsujin/dxvk/releases/download/v1.9.1/dxvk-1.9.1.tar.gz" -O dxvk-1.9.1.tar.gz
+			fi
+		
+			if md5sum ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz | grep -i 09058abcd44d72a7555fac0a2254351a > /dev/null;
+			then 
+				tar -xf ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz
+				break
+			else 
+				rm ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz
+			fi
+		done
+		 bash ~/.wine-roblox-malik/dxvk-1.9.1/setup_dxvk.sh install
+		else
+		 echo "Skipping DXVK!"
+		fi
+	fi
+fi
 
 echo " " 
 # let user know their system has just been pimped :)
-echo "Setup complete remember to reset browser settings to default if no option to open with roblox-malik . . ."
+echo "Setup complete remember to reset browser settings to default settings if there is no option to open with roblox-malik . . ."
+exit
 
 }
 
