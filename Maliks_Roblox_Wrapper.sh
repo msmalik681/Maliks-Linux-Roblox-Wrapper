@@ -96,7 +96,6 @@ if [ ! -f ~/.wine-roblox-malik/RobloxPlayerLauncher.exe ];
 then
 	wget -O ~/.wine-roblox-malik/RobloxPlayerLauncher.exe https://setup.rbxcdn.com/RobloxPlayerLauncher.exe
 	~/.wine-roblox-malik/$WINE_NAME/bin/wine64 ~/.wine-roblox-malik/RobloxPlayerLauncher.exe
-	read -p "Complete Roblox installer then press Return key to continue . . ."
 fi
 
 #Install Roblox FPS Unlocker
@@ -134,10 +133,8 @@ then
 FPS="&& if ! pgrep rbxfpsunlocker > /dev/null; then \"~/.wine-roblox-malik/$WINE_NAME/bin/wine\" \"~/.wine-roblox-malik/rbxfpsunlocker.exe\"; fi"
 fi
 
-
-
 # make desktop entry for roblox launcher.
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-malik\nExec=bash -c \"export WINEPREFIX=~/.wine-roblox-malik && export WINEESYNC=1 && export WINEFSYNC=1 && \"~/.wine-roblox-malik/$WINE_NAME/bin/wine\" \\\"\$(find ~/'.wine-roblox-malik/drive_c/users/'$USER -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U $FPS\"\nIcon=A67C_RobloxStudioLauncherBeta.0\nMimeType=x-scheme-handler/roblox-player;\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > ~/.local/share/applications/roblox-malik.desktop
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-malik\nExec=bash -c \"cp -r ~/.wine-roblox-malik/ClientSettings \\\"\$(find ~/'.wine-roblox-malik/drive_c/users/'$USER -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} \;)\\\" && export WINEPREFIX=~/.wine-roblox-malik && export WINEESYNC=1 && export WINEFSYNC=1 && \"~/.wine-roblox-malik/$WINE_NAME/bin/wine\" \\\"\$(find ~/'.wine-roblox-malik/drive_c/users/'$USER -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U $FPS \"\nIcon=A67C_RobloxStudioLauncherBeta.0\nMimeType=x-scheme-handler/roblox-player;\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > ~/.local/share/applications/roblox-malik.desktop
 
 #set and update fflag settings
 PS3="Please select Graphics API (Vulkan Recommended):"
@@ -167,8 +164,6 @@ done
 if [ ! -d ~/.wine-roblox-malik/ClientSettings ]; then mkdir ~/.wine-roblox-malik/ClientSettings; fi
 
 echo -e "$api" > ~/.wine-roblox-malik/ClientSettings/ClientAppSettings.json
-
-cp -r ~/.wine-roblox-malik/ClientSettings "$(find ~/'.wine-roblox-malik/drive_c/users/'$USER -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} \;)"
 
 
 # Install or uninstall DXVK
