@@ -1,6 +1,51 @@
 #!/bin/bash
 
 #################################################################################
+########################    Install Roblox FPS Unlocker    ######################
+#################################################################################
+
+fps_unlocker()
+{
+
+RFPSU="rbxfpsunlocker_v4.4.1.tar.xz"
+if [ ! -f "$HOME/.wine-roblox-malik/$RFPSU" ];
+then
+read -p "Do you want to install FPS Unlocker (y/n)?"
+	if [[ $REPLY =~ ^[Yy]$ ]]
+	then
+	
+	for i in {1..5}
+	do
+		
+		if [ $i == 5 ];
+		then 
+			echo "error: failed to download $RFPSU"
+			exit
+		fi
+			cd "$HOME/.wine-roblox-malik"
+			if [ ! -f "$HOME/.wine-roblox-malik/$RFPSU" ];
+			then
+			wget --no-check-certificate "https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21651&authkey=ALyLjhv_MzjV2F8" -O "$HOME/.wine-roblox-malik/$RFPSU"
+			fi
+
+			if md5sum "$HOME/.wine-roblox-malik/$RFPSU" | grep -i cb56baaa82c6f0817eae80c3d86404a3 > /dev/null;
+		then 
+			tar -xf "$HOME/.wine-roblox-malik/$RFPSU"
+			break
+		else 
+			rm "$HOME/.wine-roblox-malik/$RFPSU"
+		fi
+	done
+	fi
+fi
+if [ -f "$HOME/.wine-roblox-malik/rbxfpsunlocker.exe" ];
+then
+FPS="&& if ! pgrep rbxfpsunlocker > /dev/null; then \\\"$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine\\\" \\\"$HOME/.wine-roblox-malik/rbxfpsunlocker.exe\\\"; fi"
+fi
+
+}
+
+#################################################################################
 ########################      FULL_SETUP    #####################################
 #################################################################################
 
@@ -11,6 +56,24 @@ full_setup ()
 if [ $distro_guess = "Arch" ] && ! $distro_check lib32-gnutls > /dev/null ;
 then
   	 sudo $distro_install lib32-gnutls;
+fi
+
+# install "lib32-alsa-plugins" if missing.
+if [ $distro_guess = "Arch" ] && ! $distro_check lib32-alsa-plugins > /dev/null ;
+then
+  	 sudo $distro_install lib32-alsa-plugins;
+fi
+
+# install "lib32-libpulse" if missing.
+if [ $distro_guess = "Arch" ] && ! $distro_check lib32-libpulse > /dev/null ;
+then
+  	 sudo $distro_install lib32-libpulse;
+fi
+
+# install "lib32-openal" if missing.
+if [ $distro_guess = "Arch" ] && ! $distro_check lib32-openal > /dev/null ;
+then
+  	 sudo $distro_install lib32-openal;
 fi
 
 # install "xdg-utils" if missing.
@@ -44,27 +107,27 @@ then
 fi
 
 # remove any other roblox launchers.
-if [ -f ~/.config/mimeapps.list ];
+if [ -f "$HOME/.config/mimeapps.list" ];
 then
-	sed -i '/roblox/d' ~/.config/mimeapps.list
+	sed -i '/roblox/d' "$HOME/.config/mimeapps.list"
 fi
 
 # add my roblox launcher to xdg list.
 xdg-mime default "roblox-malik.desktop" x-scheme-handler/roblox-player
 
 # make custom directory if missing
-if [ ! -d ~/.wine-roblox-malik ];
+if [ ! -d "$HOME/.wine-roblox-malik" ];
 then
-	cd ~/
+	cd "$HOME/"
 	mkdir .wine-roblox-malik
 fi
 
 # set custom directory as default for wine to use
-export WINEPREFIX=~/.wine-roblox-malik
+export WINEPREFIX="$HOME/.wine-roblox-malik"
 export WINEDEBUG=-all
 
 # download and extract custom wine if missing.
-if [ ! -d ~/.wine-roblox-malik/$WINE_NAME ];
+if [ ! -d "$HOME/.wine-roblox-malik/$WINE_NAME" ];
 then
 	for i in {1..5}
 	do
@@ -75,66 +138,34 @@ then
 			exit
 		fi
 
-		cd ~/.wine-roblox-malik
-		if [ ! -f ~/.wine-roblox-malik/$WINE_NAME.tar.xz ];
+		cd "$HOME/.wine-roblox-malik"
+		if [ ! -f "$HOME/.wine-roblox-malik/$WINE_NAME.tar.xz" ];
 		then
 			wget --no-check-certificate $WINE_URL -O $WINE_NAME.tar.xz
 		fi
 	
-		if md5sum ~/.wine-roblox-malik/$WINE_NAME.tar.xz | grep -i $WINE_MD5 > /dev/null;
+		if md5sum "$HOME/.wine-roblox-malik/$WINE_NAME.tar.xz" | grep -i $WINE_MD5 > /dev/null;
 		then 
-			tar -xf ~/.wine-roblox-malik/$WINE_NAME.tar.xz
+			tar -xf "$HOME/.wine-roblox-malik/$WINE_NAME.tar.xz"
 			break
 		else 
-			rm ~/.wine-roblox-malik/$WINE_NAME.tar.xz
+			rm "$HOME/.wine-roblox-malik/$WINE_NAME.tar.xz"
 		fi
 	done
 fi
 
 # Download and Install Roblox if missing.
-if [ ! -f ~/.wine-roblox-malik/RobloxPlayerLauncher.exe ];
+if [ ! -f "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe" ];
 then
-	wget -O ~/.wine-roblox-malik/RobloxPlayerLauncher.exe https://setup.rbxcdn.com/RobloxPlayerLauncher.exe
-	~/.wine-roblox-malik/$WINE_NAME/bin/wine64 ~/.wine-roblox-malik/RobloxPlayerLauncher.exe
+	wget -O "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe" https://setup.rbxcdn.com/RobloxPlayerLauncher.exe
+	"$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine" "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe"
 fi
 
 #Install Roblox FPS Unlocker
-if [ ! -f ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz ];
-then
-read -p "Do you want to install FPS Unlocker (y/n)?"
-	if [[ $REPLY =~ ^[Yy]$ ]]
-	then
-	for i in {1..5}
-	do
-
-		if [ $i == 5 ];
-		then 
-			echo "error: failed to download rbxfpsunlocker.tar.xz"
-			exit
-		fi
-			cd ~/.wine-roblox-malik
-			if [ ! -f ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz ];
-			then
-			wget --no-check-certificate "https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21641&authkey=AAAqCn1NU4TVVB8" -O ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz
-			fi
-
-			if md5sum ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz | grep -i 577198b1dfb541799ab2f7641dc080d0 > /dev/null;
-		then 
-			tar -xf ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz
-			break
-		else 
-			rm ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz
-		fi
-	done
-	fi
-fi
-if [ -f ~/.wine-roblox-malik/rbxfpsunlocker.exe ];
-then
-FPS="&& if ! pgrep rbxfpsunlocker > /dev/null; then \"~/.wine-roblox-malik/$WINE_NAME/bin/wine\" \"~/.wine-roblox-malik/rbxfpsunlocker.exe\"; fi"
-fi
+fps_unlocker
 
 # make desktop entry for roblox launcher.
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-malik\nExec=bash -c \"cp -r ~/.wine-roblox-malik/ClientSettings \\\"\$(find ~/'.wine-roblox-malik/drive_c/users/'$USER -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} \;)\\\" && export WINEPREFIX=~/.wine-roblox-malik && export WINEESYNC=1 && export WINEFSYNC=1 && \"~/.wine-roblox-malik/$WINE_NAME/bin/wine\" \\\"\$(find ~/'.wine-roblox-malik/drive_c/users/'$USER -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U $FPS \"\nIcon=A67C_RobloxStudioLauncherBeta.0\nMimeType=x-scheme-handler/roblox-player;\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > ~/.local/share/applications/roblox-malik.desktop
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-malik\nExec=bash -c \"\$(if [ -f \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/GlobalBasicSettings_13.xml\\\" ]; then sed -i 's/\\\\\\\"Fullscreen\\\\\\\">true</\\\\\\\"Fullscreen\\\\\\\">false</g' \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/GlobalBasicSettings_13.xml\\\"; fi) && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U $FPS\"\nIcon=A67C_RobloxStudioLauncherBeta.0\nMimeType=x-scheme-handler/roblox-player;\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-malik.desktop"
 
 #set and update fflag settings
 PS3="Please select Graphics API (Vulkan Recommended):"
@@ -161,16 +192,18 @@ break
 esac
 done
 
-if [ ! -d ~/.wine-roblox-malik/ClientSettings ]; then mkdir ~/.wine-roblox-malik/ClientSettings; fi
+if [ ! -d "$HOME/.wine-roblox-malik/ClientSettings" ]; then mkdir "$HOME/.wine-roblox-malik/ClientSettings"; fi
 
-echo -e "$api" > ~/.wine-roblox-malik/ClientSettings/ClientAppSettings.json
+echo -e "$api" > "$HOME/.wine-roblox-malik/ClientSettings/ClientAppSettings.json"
 
 
 # Install or uninstall DXVK
 if [ $REPLY == "3" ] || [ $REPLY == "4" ];
 then
+DXVK="dxvk-1.9.4.tar.gz"
+DXVK_FOLDER="dxvk-1.9.4"
 	wineserver -k
-	if [ -f ~/.wine-roblox-malik/dosdevices/c:/windows/syswow64/d3d11.dll.old ];
+	if [ -f "$HOME/.wine-roblox-malik/dosdevices/c:/windows/syswow64/d3d11.dll.old" ];
 	then
 		read -p "Do you want to uninstall DXVK (y/n)?"
 		if [[ $REPLY =~ ^[Yy]$ ]]
@@ -181,26 +214,26 @@ then
 	
 			if [ $i == 5 ];
 			then 
-				echo "error: failed to download dxvk-1.9.1.tar.gz"
+				echo "error: failed to download $DXVK"
 				exit
 			fi
 	
-			cd ~/.wine-roblox-malik
-			if [ ! -f ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz ];
+			cd "$HOME/.wine-roblox-malik"
+			if [ ! -f "$HOME/.wine-roblox-malik/$DXVK" ];
 			then
-				wget --no-check-certificate "https://github.com/doitsujin/dxvk/releases/download/v1.9.1/dxvk-1.9.1.tar.gz" -O dxvk-1.9.1.tar.gz
+				wget --no-check-certificate "https://github.com/doitsujin/dxvk/releases/download/v1.9.4/dxvk-1.9.4.tar.gz" -O $DXVK
 			fi
 		
-			if md5sum ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz | grep -i 09058abcd44d72a7555fac0a2254351a > /dev/null;
+			if md5sum "$HOME/.wine-roblox-malik/$DXVK" | grep -i fcac4bcce02f8fc1e2d93a3f0b788757 > /dev/null;
 			then 
-				tar -xf ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz
+				tar -xf "$HOME/.wine-roblox-malik/$DXVK"
 				break
 			else 
-				rm ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz
+				rm "$HOME/.wine-roblox-malik/$DXVK"
 			fi
 		done
 		
-		 bash ~/.wine-roblox-malik/dxvk-1.9.1/setup_dxvk.sh uninstall
+		 bash "$HOME/.wine-roblox-malik/$DXVK_FOLDER/setup_dxvk.sh" uninstall
 		else
 		 echo "Skipping DXVK!"
 		fi
@@ -213,25 +246,25 @@ then
 	
 			if [ $i == 5 ];
 			then 
-				echo "error: failed to download dxvk-1.9.1.tar.gz"
+				echo "error: failed to download $DXVK"
 				exit
 			fi
 	
-			cd ~/.wine-roblox-malik
-			if [ ! -f ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz ];
+			cd "$HOME/.wine-roblox-malik"
+			if [ ! -f "$HOME/.wine-roblox-malik/$DXVK" ];
 			then
-				wget --no-check-certificate "https://github.com/doitsujin/dxvk/releases/download/v1.9.1/dxvk-1.9.1.tar.gz" -O dxvk-1.9.1.tar.gz
+				wget --no-check-certificate "https://github.com/doitsujin/dxvk/releases/download/v1.9.4/dxvk-1.9.4.tar.gz" -O $DXVK
 			fi
 		
-			if md5sum ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz | grep -i 09058abcd44d72a7555fac0a2254351a > /dev/null;
+			if md5sum "$HOME/.wine-roblox-malik/$DXVK" | grep -i fcac4bcce02f8fc1e2d93a3f0b788757 > /dev/null;
 			then 
-				tar -xf ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz
+				tar -xf "$HOME/.wine-roblox-malik/$DXVK"
 				break
 			else 
-				rm ~/.wine-roblox-malik/dxvk-1.9.1.tar.gz
+				rm "$HOME/.wine-roblox-malik/$DXVK"
 			fi
 		done
-		 bash ~/.wine-roblox-malik/dxvk-1.9.1/setup_dxvk.sh install
+		 bash "$HOME/.wine-roblox-malik/$DXVK_FOLDER/setup_dxvk.sh" install
 		else
 		 echo "Skipping DXVK!"
 		fi
@@ -288,17 +321,17 @@ echo "This Linux distro is not supported sorry. Now aborting."
 exit
 fi
 
-#confirm system wine
-if ldd --version | grep "2.27" > /dev/null ||  ldd --version | grep "2.28" > /dev/null ||  ldd --version | grep "2.29" > /dev/null;
+#confirm system glibc version then download corresponding wine
+if ldd --version | grep "2.27" > /dev/null ||  ldd --version | grep "2.28" > /dev/null ||  ldd --version | grep "2.29" > /dev/null ||  ldd --version | grep "2.30" > /dev/null;
 then
 echo "Older version of glibc found using unstable version of wine!";
 WINE_NAME="wine-6.16-roblox-amd64"
 WINE_URL="https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21643&authkey=AOc5rRwJnmud8Hw"
 WINE_MD5="ab1ee10d71c94ec7c1d5fb9d2952051b"
 else
-WINE_NAME="wine-tkg-staging-fsync-git-6.16.r0.g931daeff"
-WINE_URL="https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21628&authkey=AN73mkW13cgxtL8"
-WINE_MD5="9f3096fa1928a5b189430df14b34f601"
+WINE_NAME="wine-tkg-staging-fsync-git-7.2.r0.g68441b1d"
+WINE_URL="https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21652&authkey=AHec5auIKtJJcL8"
+WINE_MD5="944c3675bfccc0a8c73d3547992e04e6"
 fi
 
 PS3="Please make a selection:"
@@ -327,52 +360,14 @@ full_setup
 	    "Install Roblox Studio")
 	    
 #check if Roblox installed  
-if [ ! -f ~/".wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions/RobloxStudioLauncherBeta.exe" ];
+if [ ! -f "$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions/RobloxStudioLauncherBeta.exe" ];
 then
 	echo "Roblox installation missing install Roblox first!"
 	exit
 fi
 
 #Install Roblox FPS Unlocker
-if [ ! -f ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz ];
-then
-read -p "Do you want to install FPS Unlocker (y/n)?"
-	if [[ $REPLY =~ ^[Yy]$ ]]
-	then
-	for i in {1..5}
-	do
-
-		if [ $i == 5 ];
-		then 
-			echo "error: failed to download rbxfpsunlocker.tar.xz"
-			exit
-		fi
-			cd ~/.wine-roblox-malik
-			if [ ! -f ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz ];
-			then
-			wget --no-check-certificate "https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21641&authkey=AAAqCn1NU4TVVB8" -O ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz
-			fi
-
-			if md5sum ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz | grep -i 577198b1dfb541799ab2f7641dc080d0 > /dev/null;
-		then 
-			tar -xf ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz
-			break
-		else 
-			rm ~/.wine-roblox-malik/rbxfpsunlocker.tar.xz
-		fi
-	done
-	fi
-fi
-if [ -f ~/.wine-roblox-malik/rbxfpsunlocker.exe ];
-then
-FPS="&& if ! pgrep rbxfpsunlocker > /dev/null; then \"~/.wine-roblox-malik/$WINE_NAME/bin/wine\" \"~/.wine-roblox-malik/rbxfpsunlocker.exe\"; fi"
-fi
-
-#remove other studio launchers
-if [ -f ~/.config/mimeapps.list ];
-then
-	sed -i '/roblox-studio/d' ~/.config/mimeapps.list
-fi
+fps_unlocker
 
 # add my roblox studio launcher to xdg list.
 xdg-mime default "roblox-studio-malik.desktop" x-scheme-handler/roblox-studio
@@ -380,22 +375,22 @@ xdg-mime default "roblox-studio-malik.desktop" application/x-roblox-rbxl
 xdg-mime default "roblox-studio-malik.desktop" application/x-roblox-rbxlx
 
 #create desktop entry for studio
-echo -e "[Desktop Entry]\nName=Roblox-Studio-Malik\nExec=xdg-open https://www.roblox.com/login/return-to-studio\nIcon=A67C_RobloxStudioLauncherBeta.0\nTerminal=false\nType=Application\nName[en_GB]=Roblox-Studio-Malik" > ~/Desktop/'Roblox Studio Malik.desktop'
+echo -e "[Desktop Entry]\nName=Roblox-Studio-Malik\nExec=xdg-open https://www.roblox.com/login/return-to-studio\nIcon=A67C_RobloxStudioLauncherBeta.0\nTerminal=false\nType=Application\nName[en_GB]=Roblox-Studio-Malik" > "$HOME/Desktop/Roblox Studio Malik.desktop"
 
-chmod +x ~/Desktop/'Roblox Studio Malik.desktop'
+chmod +x "$HOME/Desktop/Roblox Studio Malik.desktop"
 
 #create studio desktop file for xdg-open
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-studio-malik\nExec=bash -c \"export WINEPREFIX=~/.wine-roblox-malik/studio-malik && export WINEESYNC=1 && export WINEFSYNC=1 && \"~/.wine-roblox-malik/$WINE_NAME/bin/wine\" \\\"\$(find ~/'.wine-roblox-malik/studio-malik/drive_c/users/'$USER/AppData/Local/Roblox/Versions -name 'RobloxStudioLauncherBeta.exe' -not -path '*/Temp/*')\\\" %U $FPS\"\nIcon=A67C_RobloxStudioLauncherBeta.0\nMimeType=x-scheme-handler/roblox-studio;application/x-roblox-rbxl;application/x-roblox-rbxlx\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > ~/.local/share/applications/roblox-studio-malik.desktop
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-studio-malik\nExec=bash -c \"export WINEPREFIX=\\\"$HOME/.wine-roblox-malik/studio-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/studio-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions\\\" -name 'RobloxStudioLauncherBeta.exe' -not -path '*/Temp/*')\\\" %U $FPS\"\nIcon=A67C_RobloxStudioLauncherBeta.0\nMimeType=x-scheme-handler/roblox-studio;application/x-roblox-rbxl;application/x-roblox-rbxlx\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-studio-malik.desktop"
 
 #install studio
-WINEPREFIX=~/.wine-roblox-malik/studio-malik WINEDEBUG=-all WINEESYNC=1 WINEFSYNC=1 ~/".wine-roblox-malik/$WINE_NAME/bin/wine64" ~/".wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions/RobloxStudioLauncherBeta.exe"
+WINEPREFIX="$HOME/.wine-roblox-malik/studio-malik" WINEDEBUG=-all WINEESYNC=1 WINEFSYNC=1 "$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine" "$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions/RobloxStudioLauncherBeta.exe"
 
 sleep 10
 
 read -p "$(echo -e "\\nComplete Roblox Studio installer when complete let Studio open then close it and press Return key to continue . . . \\n \\n ")"
 
 #update api to vulkan	
-sed -i 's/"FFlagDebugGraphicsPreferVulkan":false/"FFlagDebugGraphicsPreferVulkan":true/g' ~/".wine-roblox-malik/studio-malik/drive_c/users/$USER/AppData/Local/Roblox/ClientSettings/StudioAppSettings.json"
+sed -i 's/"FFlagDebugGraphicsPreferVulkan":false/"FFlagDebugGraphicsPreferVulkan":true/g' "$HOME/.wine-roblox-malik/studio-malik/drive_c/users/$USER/AppData/Local/Roblox/ClientSettings/StudioAppSettings.json"
 
 #open studio login page with default web browser
 xdg-open https://www.roblox.com/login/return-to-studio
@@ -404,34 +399,34 @@ xdg-open https://www.roblox.com/login/return-to-studio
 	    ;;
 
 #################################################################################
-########################      Uninstall Roblox        #############################
+########################      Uninstall Roblox        ###########################
 #################################################################################
 
         "Uninstall Roblox")
         
-if [ -d ~/.wine-roblox-malik ];
+if [ -d "$HOME/.wine-roblox-malik" ];
 then
-	rm -rf ~/.wine-roblox-malik
+	rm -rf "$HOME/.wine-roblox-malik"
 fi
 
-if [ -f ~/.local/share/applications/roblox-malik.desktop ];
+if [ -f "$HOME/.local/share/applications/roblox-malik.desktop" ];
 then
-	rm ~/.local/share/applications/roblox-malik.desktop
+	rm "$HOME/.local/share/applications/roblox-malik.desktop"
 fi
 
-if [ -f ~/.local/share/applications/roblox-studio-malik.desktop ];
+if [ -f "$HOME/.local/share/applications/roblox-studio-malik.desktop" ];
 then
-	rm ~/.local/share/applications/roblox-studio-malik.desktop
+	rm "$HOME/.local/share/applications/roblox-studio-malik.desktop"
 fi
 
-if [ -f ~/Desktop/'Roblox Studio Malik.desktop' ];
+if [ -f "$HOME/Desktop/Roblox Studio Malik.desktop" ];
 then
-	rm ~/Desktop/'Roblox Studio Malik.desktop'
+	rm "$HOME/Desktop/Roblox Studio Malik.desktop"
 fi
 
-if [ -f ~/.config/mimeapps.list ];
+if [ -f "$HOME/.config/mimeapps.list" ];
 then
-	sed -i '/-malik/d' ~/.config/mimeapps.list
+	sed -i '/roblox/d' "$HOME/.config/mimeapps.list"
 fi
 echo "Uninstall Complete!"
 	exit
