@@ -283,6 +283,14 @@ exit
 ########################      SETUP        ######################################
 #################################################################################
 
+which pacman >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+distro_guess="Arch"
+distro_check="pacman -Qs"
+distro_install="pacman -S"
+fi
+
 which apt >/dev/null 2>&1
 if [ $? -eq 0 ]
 then
@@ -297,14 +305,6 @@ then
 distro_guess="Fedora"
 distro_check="rpm -q"
 distro_install="yum install"
-fi
-
-which pacman >/dev/null 2>&1
-if [ $? -eq 0 ]
-then
-distro_guess="Arch"
-distro_check="pacman -Qs"
-distro_install="pacman -S"
 fi
 
 which zypper >/dev/null 2>&1
