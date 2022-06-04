@@ -7,7 +7,7 @@
 fps_unlocker()
 {
 
-RFPSU="rbxfpsunlocker_v4.4.1.tar.xz"
+RFPSU="rbxfpsunlocker_v4.4.2.tar.xz"
 if [ ! -f "$HOME/.wine-roblox-malik/$RFPSU" ];
 then
 read -p "Do you want to install FPS Unlocker (y/n)?"
@@ -25,10 +25,10 @@ read -p "Do you want to install FPS Unlocker (y/n)?"
 			cd "$HOME/.wine-roblox-malik"
 			if [ ! -f "$HOME/.wine-roblox-malik/$RFPSU" ];
 			then
-			wget --no-check-certificate "https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21651&authkey=ALyLjhv_MzjV2F8" -O "$HOME/.wine-roblox-malik/$RFPSU"
+			wget --no-check-certificate "https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21657&authkey=AESf097-NBSK_bE" -O "$HOME/.wine-roblox-malik/$RFPSU"
 			fi
 
-			if md5sum "$HOME/.wine-roblox-malik/$RFPSU" | grep -i cb56baaa82c6f0817eae80c3d86404a3 > /dev/null;
+			if md5sum "$HOME/.wine-roblox-malik/$RFPSU" | grep -i d7d7c8d3a6754c4d3434620fbe052160 > /dev/null;
 		then 
 			tar -xf "$HOME/.wine-roblox-malik/$RFPSU"
 			break
