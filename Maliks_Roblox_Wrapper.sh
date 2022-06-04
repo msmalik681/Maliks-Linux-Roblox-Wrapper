@@ -165,7 +165,7 @@ fi
 fps_unlocker
 
 # make desktop entry for roblox launcher.
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-malik\nExec=bash -c \"\$(if [ -f \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/GlobalBasicSettings_13.xml\\\" ]; then sed -i 's/\\\\\\\"Fullscreen\\\\\\\">true</\\\\\\\"Fullscreen\\\\\\\">false</g' \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/GlobalBasicSettings_13.xml\\\"; fi) && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U $FPS\"\nIcon=A67C_RobloxStudioLauncherBeta.0\nMimeType=x-scheme-handler/roblox-player;\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-malik.desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-malik\nExec=bash -c \"\$(if [ -f \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/GlobalBasicSettings_13.xml\\\" ]; then sed -i 's/\\\\\\\"Fullscreen\\\\\\\">true</\\\\\\\"Fullscreen\\\\\\\">false</g' \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/GlobalBasicSettings_13.xml\\\"; fi) && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U $FPS\"\nIcon=A67C_RobloxStudioLauncherBeta.0\nMimeType=x-scheme-handler/roblox-player;\nIcon=utilities-terminal\nType=Application\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-malik.desktop"
 
 #set and update fflag settings
 PS3="Please select Graphics API (Vulkan Recommended):"
@@ -173,19 +173,19 @@ APIs=("Vulkan" "OpenGL" "DirectX11" "DirectX9")
 select fav in "${APIs[@]}"; do
     case $fav in
 "Vulkan")
-api="{\"FFlagDebugGraphicsPreferVulkan\": true, \"DFFlagClientVisualEffectRemote\": false}"
+api="{\"FFlagDebugGraphicsPreferVulkan\": true }"
 break
 ;;
 "OpenGL")
-api="{\"FFlagDebugGraphicsPreferOpenGL\": true, \"DFFlagClientVisualEffectRemote\": false}"
+api="{\"FFlagDebugGraphicsPreferOpenGL\": true, \"FFlagGraphicsGLUseDefaultVAO\": true }"
 break
 ;;
 "DirectX11")
-api="{\"FFlagDebugGraphicsPreferD3D11\": true, \"DFFlagClientVisualEffectRemote\": false}"
+api="{\"FFlagDebugGraphicsPreferD3D11\": true }"
 break
 ;;
 "DirectX9")
-api="{\"FFlagDebugGraphicsPreferD3D9\": true, \"DFFlagClientVisualEffectRemote\": false}"
+api="{\"FFlagDebugGraphicsPreferD3D9\": true }"
 break
 ;;
 *) echo "Invalid selection $REPLY. Valid selections are 1, 2, 3 and 4.";;
@@ -283,14 +283,6 @@ exit
 ########################      SETUP        ######################################
 #################################################################################
 
-which pacman >/dev/null 2>&1
-if [ $? -eq 0 ]
-then
-distro_guess="Arch"
-distro_check="pacman -Qs"
-distro_install="pacman -S"
-fi
-
 which apt >/dev/null 2>&1
 if [ $? -eq 0 ]
 then
@@ -315,6 +307,14 @@ distro_check="zypper search -i"
 distro_install="zypper install"
 fi
 
+which pacman >/dev/null 2>&1
+if [ $? -eq 0 ]
+then
+distro_guess="Arch"
+distro_check="pacman -Qs"
+distro_install="pacman -S"
+fi
+
 if test -z $distro_guess;
 then
 echo "This Linux distro is not supported sorry. Now aborting."
@@ -329,9 +329,9 @@ WINE_NAME="wine-6.16-roblox-amd64"
 WINE_URL="https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21643&authkey=AOc5rRwJnmud8Hw"
 WINE_MD5="ab1ee10d71c94ec7c1d5fb9d2952051b"
 else
-WINE_NAME="wine-tkg-staging-fsync-git-7.2.r0.g68441b1d"
-WINE_URL="https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21652&authkey=AHec5auIKtJJcL8"
-WINE_MD5="944c3675bfccc0a8c73d3547992e04e6"
+WINE_NAME="wine-tkg-staging-fsync-git-7.1.r0.gf5ca8f5a"
+WINE_URL="https://onedrive.live.com/download?cid=CFF1642CDA1859A3&resid=CFF1642CDA1859A3%21649&authkey=AKEUgV25AUczKDw"
+WINE_MD5="dcabd1e95bbb84e19afe7636165524c7"
 fi
 
 PS3="Please make a selection:"
