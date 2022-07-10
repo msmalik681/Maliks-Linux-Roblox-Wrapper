@@ -345,8 +345,6 @@ select fav in "${distros[@]}"; do
 
         "Install Roblox")
 
-read -p "Roblox setup for $distro_guess Linux. Close all web browsers then press Return key to start . . ."
-
 full_setup
 
 		exit
