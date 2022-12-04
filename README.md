@@ -18,4 +18,4 @@ Studio can only be run after Roblox is installed I have enabled Vulkan as the de
 
 If you are having trouble with this wrapper you could join my discord server. 
 
-https://discord.gg/c8UvfqQR
+https://discord.gg/P44baVdCHF
