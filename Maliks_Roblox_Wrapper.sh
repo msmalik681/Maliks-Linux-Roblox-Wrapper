@@ -51,9 +51,10 @@ read -p "Do you want to install FPS Unlocker (y/n)?"
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 
-		downloader $RFPSU "$HOME/.wine-roblox-malik/$RFPSU.tar.xz" "https://api.onedrive.com/v1.0/shares/s!AqNZGNosZPHPhRipopl9SAAPODYO/root/content" 867211166400081f60f7c02c077d6482
-	else 
-		rm "$HOME/.wine-roblox-malik/$RFPSU"
+wget --no-check-certificate https://github.com/axstin/rbxfpsunlocker/releases/latest/download/rbxfpsunlocker-x64.zip -O "$HOME/.wine-roblox-malik/rbxfpsunlocker-x64.zip"
+
+unzip "$HOME/.wine-roblox-malik/rbxfpsunlocker-x64.zip" -d "$HOME/.wine-roblox-malik/"
+
 	fi
 fi
 
@@ -117,6 +118,12 @@ fi
 if ! $distro_check wget > /dev/null ;
 then
   sudo $distro_install wget;
+fi
+
+# install "unzip" if missing.
+if ! $distro_check unzip > /dev/null ;
+then
+  sudo $distro_install unzip;
 fi
 
 # remove any other roblox launchers.
