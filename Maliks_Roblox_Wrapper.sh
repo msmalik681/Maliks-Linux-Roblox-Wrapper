@@ -164,7 +164,8 @@ export WINEDEBUG=-all
 if [ ! -f "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe" ];
 then
 	wget -O "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe" https://setup.rbxcdn.com/RobloxPlayerLauncher.exe
-
+	
+	mkdir -p "$WINEPREFIX/drive_c/users/$USER/AppData/Local/Roblox/Downloads/roblox-player"
 	$WINE_RUN "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe"
 
 	echo " "
