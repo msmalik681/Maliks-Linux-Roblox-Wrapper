@@ -34,37 +34,6 @@ downloader()
 }
 
 
-
-
-#################################################################################
-########################    Install Roblox FPS Unlocker    ######################
-#################################################################################
-
-fps_unlocker()
-{
-
-RFPSU="rbxfpsunlocker_v4.4.3"
-
-if [ ! -f "$HOME/.wine-roblox-malik/$RFPSU.tar.xz" ];
-then
-read -p "Do you want to install FPS Unlocker (y/n)?"
-	if [[ $REPLY =~ ^[Yy]$ ]]
-	then
-
-wget --no-check-certificate https://github.com/axstin/rbxfpsunlocker/releases/latest/download/rbxfpsunlocker-x64.zip -O "$HOME/.wine-roblox-malik/rbxfpsunlocker-x64.zip"
-
-unzip "$HOME/.wine-roblox-malik/rbxfpsunlocker-x64.zip" -d "$HOME/.wine-roblox-malik/"
-
-	fi
-fi
-
-if [ -f "$HOME/.wine-roblox-malik/rbxfpsunlocker.exe" ];
-then
-FPS="&& if ! pgrep rbxfpsunlocker > /dev/null; then \\\"$WINE_RUN\\\" \\\"$HOME/.wine-roblox-malik/rbxfpsunlocker.exe\\\"; fi"
-fi
-
-}
-
 #################################################################################
 ########################      FULL_SETUP    #####################################
 #################################################################################
@@ -148,28 +117,23 @@ export WINEDEBUG=-all
 
 # download and extract custom wine if needed.
 
-#read -p "Do you want to use a downloaded wine build (y/n)?"
-#if [[ $REPLY =~ ^[Yy]$ ]]
-#then
 	if [ ! -d "$HOME/.wine-roblox-malik/$WINE_NAME" ];
 	then
 		
 		downloader $WINE_NAME "$HOME/.wine-roblox-malik/$WINE_NAME.tar.xz" $WINE_URL $WINE_MD5
 	fi
-#else
-#	WINE_RUN="wine"
-#fi
+
 
 # Download and Install Roblox if missing.
 if [ ! -f "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe" ];
 then
 	wget -O "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe" https://setup.rbxcdn.com/RobloxPlayerLauncher.exe
-	
-	mkdir -p "$WINEPREFIX/drive_c/users/$USER/AppData/Local/Roblox/Downloads/roblox-player"
+
 	$WINE_RUN "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe"
 
-	echo " "
-	read -p "please complete the Roblox setup then press any key to continue. If there was any error please start this setup again but uninstall first."
+	clear
+	read -p "If the setup gets stuck on installing or when completed, press return to key to continue."
+	pkill Edge
 	rm "$HOME/Desktop/Roblox Player.desktop"
 	rm "$HOME/Desktop/Roblox Player.lnk"
 	rm "$HOME/Desktop/Roblox Studio.desktop"
@@ -180,15 +144,12 @@ then
 fi
 
 
-#Install Roblox FPS Unlocker
-fps_unlocker
-
 # make desktop entry for roblox player.
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-player-malik\nExec=bash -c \"\$(if [ -f \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/GlobalBasicSettings_13.xml\\\" ]; then sed -i 's/\\\\\\\"Fullscreen\\\\\\\">true</\\\\\\\"Fullscreen\\\\\\\">false</g' \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/GlobalBasicSettings_13.xml\\\"; fi) && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER\\\" -name 'RobloxPlayerBeta.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U $FPS\"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-malik.desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-player-malik\nExec=bash -c \"cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U \"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-malik.desktop"
 chmod +x "$HOME/.local/share/applications/roblox-malik.desktop"
 
 # make desktop app loader for users who cant load games through the website.
-echo -e "[Desktop Entry]\nVersion=1.0\nName=Roblox App Malik\nExec=bash -c \"\$(if [ -f \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/GlobalBasicSettings_13.xml\\\" ]; then sed -i 's/\\\\\\\"Fullscreen\\\\\\\">true</\\\\\\\"Fullscreen\\\\\\\">false</g' \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/GlobalBasicSettings_13.xml\\\"; fi) && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER\\\" -name 'RobloxPlayerBeta.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER\\\" -name 'RobloxPlayerBeta.exe' -not -path '*/Temp/*')\\\" $FPS\"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$HOME/Desktop/Roblox App Malik.desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=Roblox App Malik\nExec=bash -c \" cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" -app\"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$HOME/Desktop/Roblox App Malik.desktop"
 chmod +x "$HOME/Desktop/Roblox App Malik.desktop"
 
 #set and update fflag settings
@@ -259,7 +220,7 @@ fi
 
 echo " " 
 # let user know their system has just been pimped :)
-echo "Setup complete remember to reset browser settings to default settings if there is no option to open with roblox-malik. You can now log in with the app on your desktop using quick login."
+echo "Setup complete remember if any updates get stuck, from a terminal run: \"pkill Edge\". You can now log in with the app on your desktop using quick login."
 main_menu
 
 }
@@ -314,9 +275,9 @@ exit
 fi
 
 #custom wine details
-		WINE_NAME="wine-tkg-staging-fsync-git-7.6.r0.g539ecd2f"
-		WINE_URL="https://api.onedrive.com/v1.0/shares/s!AqNZGNosZPHPhRnKPYxCFeuWtqwD/root/content"
-		WINE_MD5="519e88796403b148f020ce3b961f868a"
+		WINE_NAME="wine-8.14-staging-tkg-amd64"
+		WINE_URL="https://github.com/Kron4ek/Wine-Builds/releases/download/8.14/wine-8.14-staging-tkg-amd64.tar.xz"
+		WINE_MD5="fc99eeb4e1f36f4aaede9608a5eeb684"
 		WINE_RUN="$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine"
 
 PS3="Please make a selection:"
