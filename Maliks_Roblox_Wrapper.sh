@@ -127,13 +127,17 @@ export WINEDEBUG=-all
 # Download and Install Roblox if missing.
 if [ ! -f "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe" ];
 then
+
+	#first lets block edge webview2 install
+	mkdir -p "$HOME/.wine-roblox-malik/drive_c/Program Files (x86)/Microsoft"
+	chmod 000 "$HOME/.wine-roblox-malik/drive_c/Program Files (x86)/Microsoft"
+	#download and install roblox player
 	wget -O "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe" https://setup.rbxcdn.com/RobloxPlayerLauncher.exe
 
 	$WINE_RUN "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe"
 
 	clear
-	read -p "If the setup gets stuck on installing or when completed, press return to key to continue."
-	pkill Edge
+	read -p "When setup has completed, press return to key to continue."
 	rm "$HOME/Desktop/Roblox Player.desktop"
 	rm "$HOME/Desktop/Roblox Player.lnk"
 	rm "$HOME/Desktop/Roblox Studio.desktop"
@@ -143,43 +147,55 @@ then
 	echo " "
 fi
 
-
 # make desktop entry for roblox player.
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-player-malik\nExec=bash -c \"cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U \"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-malik.desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-player-malik\nExec=bash -c \"cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U \"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-malik.desktop"
 chmod +x "$HOME/.local/share/applications/roblox-malik.desktop"
 
 # make desktop app loader for users who cant load games through the website.
-echo -e "[Desktop Entry]\nVersion=1.0\nName=Roblox App Malik\nExec=bash -c \" cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" -app\"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$HOME/Desktop/Roblox App Malik.desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=Roblox App Malik\nExec=bash -c \" cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" -app\"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$HOME/Desktop/Roblox App Malik.desktop"
 chmod +x "$HOME/Desktop/Roblox App Malik.desktop"
 
 #set and update fflag settings
-PS3="Please select Graphics API (Vulkan Recommended):"
-APIs=("Vulkan" "OpenGL" "DirectX11" "DirectX9")
+PS3="Please select Graphics API (OpenGL Recommended):"
+APIs=("Vulkan" "OpenGL" "DirectX11")
 select fav in "${APIs[@]}"; do
     case $fav in
 "Vulkan")
-api="{\"FFlagDebugGraphicsPreferVulkan\": true }"
+api="{\"FFlagDebugGraphicsPreferVulkan\": true"
 break
 ;;
 "OpenGL")
-api="{\"FFlagDebugGraphicsPreferOpenGL\": true }"
+api="{\"FFlagDebugGraphicsPreferOpenGL\": true"
 break
 ;;
 "DirectX11")
-api="{\"FFlagDebugGraphicsPreferD3D11\": true }"
+api="{\"FFlagDebugGraphicsPreferD3D11\": true"
 break
 ;;
-"DirectX9")
-api="{\"FFlagDebugGraphicsPreferD3D9\": true }"
-break
-;;
-*) echo "Invalid selection $REPLY. Valid selections are 1, 2, 3 and 4.";;
+*) echo "Invalid selection $REPLY. Valid selections are 1, 2 and 3.";;
 esac
 done
 
+echo ""
+
+read -p "Do you want boost FPS (y/n)?"
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	api="$api, \"FFlagGraphicsGLTextureReduction\": true"
+fi
+
+echo ""
+
+read -p "Do you want to unlock FPS (y/n)?"
+if [[ $REPLY =~ ^[Yy]$ ]]
+then
+	api="$api, \"DFIntTaskSchedulerTargetFps\": 300"
+fi
+
+
 if [ ! -d "$HOME/.wine-roblox-malik/ClientSettings" ]; then mkdir "$HOME/.wine-roblox-malik/ClientSettings"; fi
 
-echo -e "$api" > "$HOME/.wine-roblox-malik/ClientSettings/ClientAppSettings.json"
+echo -e "$api}" > "$HOME/.wine-roblox-malik/ClientSettings/ClientAppSettings.json"
 
 wineserver -k
 
@@ -220,7 +236,7 @@ fi
 
 echo " " 
 # let user know their system has just been pimped :)
-echo "Setup complete remember if any updates get stuck, from a terminal run: \"pkill Edge\". You can now log in with the app on your desktop using quick login."
+echo "Setup complete. You can now log in with the app on your desktop using \"quick login\" from the website."
 main_menu
 
 }
@@ -274,10 +290,9 @@ echo "This Linux distro is not supported sorry. Now aborting."
 exit
 fi
 
-#custom wine details
-		WINE_NAME="wine-8.14-staging-tkg-amd64"
-		WINE_URL="https://github.com/Kron4ek/Wine-Builds/releases/download/8.14/wine-8.14-staging-tkg-amd64.tar.xz"
-		WINE_MD5="fc99eeb4e1f36f4aaede9608a5eeb684"
+		WINE_NAME="wine-8.15-amd64"
+		WINE_URL="https://github.com/Kron4ek/Wine-Builds/releases/download/8.15/wine-8.15-amd64.tar.xz"
+		WINE_MD5="932480a9cc5fc70a3aa4de46184605f9"
 		WINE_RUN="$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine"
 
 PS3="Please make a selection:"
