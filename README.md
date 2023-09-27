@@ -8,16 +8,14 @@ Download latest release from https://github.com/msmalik681/Maliks-Linux-Roblox-W
 
 Once the file is executable just run it. Open a terminal window then drag and drop the file in there then press return to run it or open a terminal in the same directory and run "./Maliks_Roblox_Wrapper.sh".
 
-During setup if the roblox installer gets stuck just go back to the setup and press return to continue it will complete the setup. Also if any roblox updates get stuck open a terminal window and type "pkill Edge" this will complete the setup for you. I have not found any good way to avoid manually doing this for now.
-
-I highly recommend to first uninstall Roblox then install. There are options for graphics API I recommend Vulkan but some users may get better FPS with OpenGL. Avoid Direct X as they are not native to Linux.
+I highly recommend to first uninstall Roblox then install even if you have never used this wrapper before. There are options for graphics API I recommend OpenGL as Vulkan is a bit broken for now, avoid Direct X as it is not native to Linux.
 
 ### Roblox Studio ###
 
-Studio can only be run after Roblox is installed I have enabled Vulkan as the default graphics API as it is the only stable one. If you having trouble with this you could try grapejuice.
+Studio can only be installed after Roblox is installed. Be sure to login to the Roblox app using quick login and the website then studio will work from the desktop shortcut only. If you having trouble with this you could try grapejuice.
 
 ### Support ###
 
-If you are having trouble with this wrapper you could join my discord server. 
+If you are having trouble with this wrapper you could join my discord server for more support. 
 
 https://discord.gg/P44baVdCHF

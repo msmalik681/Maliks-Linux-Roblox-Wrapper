@@ -101,6 +101,18 @@ then
 	sed -i '/roblox/d' "$HOME/.config/mimeapps.list"
 fi
 
+# remove any other roblox launchers for flatpaks. and install.
+if [ -f "$HOME/.local/share/applications/mimeinfo.cache" ];
+then
+	sed -i '/roblox/d' "$HOME/.local/share/applications/mimeinfo.cache"
+	echo "x-scheme-handler/roblox-player=roblox-malik.desktop" >> "$HOME/.local/share/applications/mimeinfo.cache"
+else
+	echo "[MIME Cache]\nx-scheme-handler/roblox-player=roblox-malik.desktop" > "$HOME/.local/share/applications/mimeinfo.cache"
+fi
+
+make the new file read only
+chmod 444 "$HOME/.local/share/applications/mimeinfo.cache"
+
 # add my roblox launcher to xdg list.
 xdg-mime default "roblox-malik.desktop" x-scheme-handler/roblox-player
 
@@ -295,6 +307,11 @@ fi
 		WINE_MD5="932480a9cc5fc70a3aa4de46184605f9"
 		WINE_RUN="$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine"
 
+		STUDIO_WINE_NAME="lutris-GE-Proton8-17-x86_64"
+		STUDIO_WINE_URL="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton8-17/wine-lutris-GE-Proton8-17-x86_64.tar.xz"
+		STUDIO_WINE_MD5="351b8e823a969fc14025c4048bc64807"
+		STUDIO_WINE_RUN="$HOME/.wine-roblox-malik/$STUDIO_WINE_NAME/bin/wine"
+
 PS3="Please make a selection:"
 distros=("Install Roblox" "Install Roblox Studio" "Uninstall Roblox" "Exit")
 select fav in "${distros[@]}"; do
@@ -320,11 +337,20 @@ main_menu
 	    "Install Roblox Studio")
 	    
 #check if Roblox installed  
-if [ ! -f "$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions/RobloxStudioLauncherBeta.exe" ];
+if [ ! -f "$HOME/.wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions/RobloxStudioLauncherBeta.exe" ];
 then
+	clear
 	echo "Roblox installation missing install Roblox first!"
-	exit
+	main_menu
 fi
+
+# download and extract custom wine if needed.
+
+	if [ ! -d "$HOME/.wine-roblox-malik/$STUDIO_WINE_NAME" ];
+	then
+		
+		downloader $STUDIO_WINE_NAME "$HOME/.wine-roblox-malik/$STUDIO_WINE_NAME.tar.xz" $STUDIO_WINE_URL $STUDIO_WINE_MD5
+	fi
 
 # add my roblox studio launcher to xdg list.
 xdg-mime default "roblox-studio-malik.desktop" x-scheme-handler/roblox-studio
@@ -333,23 +359,23 @@ xdg-mime default "roblox-studio-malik.desktop" application/x-roblox-rbxl
 xdg-mime default "roblox-studio-malik.desktop" application/x-roblox-rbxlx
 
 #create studio and studio auth desktop files for xdg-open
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-studio-malik\nExec=bash -c \"export WINEPREFIX=\\\"$HOME/.wine-roblox-malik/studio-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/studio-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions\\\" -name 'RobloxStudioLauncherBeta.exe' -not -path '*/Temp/*')\\\" %U\"\nIcon=$HOME/.wine-roblox-malik/Roblox-Studio-Beta.png\nMimeType=x-scheme-handler/roblox-studio;application/x-roblox-rbxl;application/x-roblox-rbxlx\nType=Application\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-studio-malik.desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-studio-malik\nExec=bash -c \"export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$STUDIO_WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxStudioLauncherBeta.exe' -not -path '*/Temp/*')\\\" %U\"\nIcon=$HOME/.wine-roblox-malik/Roblox-Studio-Beta.png\nMimeType=x-scheme-handler/roblox-studio;application/x-roblox-rbxl;application/x-roblox-rbxlx\nType=Application\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-studio-malik.desktop"
 chmod +x "$HOME/.local/share/applications/roblox-studio-malik.desktop"
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-studio-auth-malik\nExec=bash -c \"export WINEPREFIX=\\\"$HOME/.wine-roblox-malik/studio-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/studio-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions\\\" -name 'RobloxStudioBeta.exe' -not -path '*/Temp/*')\\\" %U\"\nIcon=$HOME/.wine-roblox-malik/Roblox-Studio-Beta.png\nMimeType=x-scheme-handler/roblox-studio-auth;application/x-roblox-rbxl;application/x-roblox-rbxlx\nType=Application\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-studio-auth-malik.desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-studio-auth-malik\nExec=bash -c \"export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$STUDIO_WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxStudioBeta.exe' -not -path '*/Temp/*')\\\" %U\"\nIcon=$HOME/.wine-roblox-malik/Roblox-Studio-Beta.png\nMimeType=x-scheme-handler/roblox-studio-auth;application/x-roblox-rbxl;application/x-roblox-rbxlx\nType=Application\nTerminal=false\n" > "$HOME/.local/share/applications/roblox-studio-auth-malik.desktop"
 chmod +x "$HOME/.local/share/applications/roblox-studio-auth-malik.desktop"
 
 #install studio
-WINEPREFIX="$HOME/.wine-roblox-malik/studio-malik" WINEDEBUG=-all WINEESYNC=1 WINEFSYNC=1 $WINE_RUN "$HOME/.wine-roblox-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions/RobloxStudioLauncherBeta.exe"
+WINEPREFIX="$HOME/.wine-roblox-malik" WINEDEBUG=-all WINEESYNC=1 WINEFSYNC=1 $STUDIO_WINE_RUN "$HOME/.wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions/RobloxStudioLauncherBeta.exe"
 rm "$HOME/Desktop/Roblox Studio.desktop"
 rm "$HOME/Desktop/Roblox Studio.lnk"
 
-echo -e "[Desktop Entry]\nVersion=1.0\nName=Roblox Studio Malik\nExec=bash -c \"export WINEPREFIX=\\\"$HOME/.wine-roblox-malik/studio-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/studio-malik/drive_c/users/$USER/AppData/Local/Roblox/Versions\\\" -name 'RobloxStudioLauncherBeta.exe' -not -path '*/Temp/*') \\\" -ide \"\nIcon=$HOME/.wine-roblox-malik/Roblox-Studio-Beta.png\nMimeType=x-scheme-handler/roblox-studio;application/x-roblox-rbxl;application/x-roblox-rbxlx\nType=Application\n" > "$HOME/Desktop/Roblox Studio Malik.desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=Roblox Studio Malik\nExec=bash -c \" notify-send \\\"Login to Roblox Player App for Studio to work!\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$STUDIO_WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxStudioBeta.exe' -not -path '*/Temp/*') \\\" -ide \"\nIcon=$HOME/.wine-roblox-malik/Roblox-Studio-Beta.png\nMimeType=x-scheme-handler/roblox-studio;application/x-roblox-rbxl;application/x-roblox-rbxlx\nType=Application\n" > "$HOME/Desktop/Roblox Studio Malik.desktop"
 chmod +x "$HOME/Desktop/Roblox Studio Malik.desktop"
 
-sleep 3
+sleep 20
 
 #update api to vulkan	
-sed -i 's/"FFlagDebugGraphicsPreferVulkan":false/"FFlagDebugGraphicsPreferVulkan":true/g' "$HOME/.wine-roblox-malik/studio-malik/drive_c/users/$USER/AppData/Local/Roblox/ClientSettings/StudioAppSettings.json"
+#sed -i 's/"FFlagDebugGraphicsPreferVulkan":false/"FFlagDebugGraphicsPreferVulkan":true/g' "$HOME/.wine-roblox-malik/studio-malik/drive_c/Program Files (x86)/Roblox/ClientSettings/StudioAppSettings.json"
 
 clear
 echo "Roblox Studio setup complete."
@@ -362,6 +388,11 @@ main_menu
 
         "Uninstall Roblox")
         
+if [ -d "$HOME/.local/share/applications/mimeinfo.cache" ];
+then
+	rm -rf "$HOME/.local/share/applications/mimeinfo.cache"
+fi
+
 if [ -d "$HOME/.wine-roblox-malik" ];
 then
 	rm -rf "$HOME/.wine-roblox-malik"
