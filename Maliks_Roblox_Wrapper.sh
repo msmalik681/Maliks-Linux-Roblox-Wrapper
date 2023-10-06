@@ -302,10 +302,10 @@ echo "This Linux distro is not supported sorry. Now aborting."
 exit
 fi
 
-		WINE_NAME="wine-8.15-amd64"
-		WINE_URL="https://github.com/Kron4ek/Wine-Builds/releases/download/8.15/wine-8.15-amd64.tar.xz"
-		WINE_MD5="932480a9cc5fc70a3aa4de46184605f9"
-		WINE_RUN="$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine"
+		WINE_NAME="lutris-GE-Proton8-17-x86_64"
+		WINE_URL="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton8-17/wine-lutris-GE-Proton8-17-x86_64.tar.xz"
+		WINE_MD5="351b8e823a969fc14025c4048bc64807"
+		WINE_RUN="$HOME/.wine-roblox-malik/$STUDIO_WINE_NAME/bin/wine"
 
 		STUDIO_WINE_NAME="lutris-GE-Proton8-17-x86_64"
 		STUDIO_WINE_URL="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton8-17/wine-lutris-GE-Proton8-17-x86_64.tar.xz"
