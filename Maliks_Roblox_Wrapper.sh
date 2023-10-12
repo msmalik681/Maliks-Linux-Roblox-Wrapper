@@ -1,12 +1,17 @@
 #!/bin/bash
 
-
 #text colours
 Green='\033[1;32m'
 Red='\033[1;31m'
 Yellow='\033[1;33m'
 Blue='\033[1;34m'
 Reset='\033[m'
+
+if ! lscpu | grep avx > /dev/null;
+then 
+	echo -e "${Red} Warning: Your CPU does not support AVX it may not work with Roblox. Press return to continue.${Reset}"
+read -p " "
+fi
 
 downloader()
 {
