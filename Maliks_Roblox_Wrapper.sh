@@ -7,12 +7,22 @@ Yellow='\033[1;33m'
 Blue='\033[1;34m'
 Reset='\033[m'
 
+# check if cpu supports avx
 if ! lscpu | grep avx > /dev/null;
 then 
 	echo -e "${Red} Warning: Your CPU does not support AVX it may not work with Roblox. Press return to continue.${Reset}"
 read -p " "
 fi
 
+# check glibc is 2.31 or newer
+if ldd --version | grep "2\\.30]\|2\\.2" > /dev/null;
+then
+	echo -e "${Red} Error: Your system is unsupported. Please update to glibc 2.31 or greater. Press return to continue.${Reset}"
+	read -p " "
+	exit
+fi
+
+# function to try to download files
 downloader()
 {
 	DL_NAME=$1
@@ -184,7 +194,7 @@ fi
 
 # make desktop entry for roblox player.
 desktop="$HOME/.local/share/applications/roblox-malik.desktop"
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-player-malik\nExec=bash -c '	find "$(xdg-user-dir DESKTOP)" -name \"*Roblox*\" -not -name \"*Malik*\" -delete && dir=\"\$(find \"/home/malik/.wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions\" -name \"RobloxPlayerLauncher.exe\" -not -path \"*/Temp/*\" -exec dirname {} \";\" )\" && echo -e \"#!/bin/bash\\\n cp -r \\\"/home/malik/.wine-roblox-malik/ClientSettings\\\" \\\"\$dir\\\" \\\n export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" \\\n export WINEPREFIX=\\\"/home/malik/.wine-roblox-malik\\\" \\\n export WINEESYNC=1 \\\n export WINEFSYNC=1 \\\n \\\"/home/malik/.wine-roblox-malik/lutris-GE-Proton8-17-x86_64/bin/wine\\\" \\\"\$dir/RobloxPlayerLauncher.exe\\\" %U \\\n rm Run_RobloxGame_Malik.run \" > \"$(xdg-user-dir DESKTOP)/Run_RobloxGame_Malik.run\" && chmod +x \"$(xdg-user-dir DESKTOP)/Run_RobloxGame_Malik.run\" && zenity --info --text=\"Now launch Run_RobloxGame_Malik.run from the desktop!\" '\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-player-malik\nExec=bash -c '	find "$(xdg-user-dir DESKTOP)" -name \"*Roblox*\" -not -name \"*Malik*\" -delete && dir=\"\$(find \"/home/malik/.wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions\" -name \"RobloxPlayerLauncher.exe\" -not -path \"*/Temp/*\" -exec dirname {} \";\" )\" && echo -e \"#!/bin/bash\\\n cp -r \\\"/home/malik/.wine-roblox-malik/ClientSettings\\\" \\\"\$dir\\\" \\\n export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" \\\n export WINEPREFIX=\\\"/home/malik/.wine-roblox-malik\\\" \\\n export WINEESYNC=1 \\\n export WINEFSYNC=1 \\\n \\\"$WINE_RUN\\\" \\\"\$dir/RobloxPlayerLauncher.exe\\\" %U \\\n rm Run_RobloxGame_Malik.run \" > \"$(xdg-user-dir DESKTOP)/Run_RobloxGame_Malik.run\" && chmod +x \"$(xdg-user-dir DESKTOP)/Run_RobloxGame_Malik.run\" && zenity --info --text=\"Now launch Run_RobloxGame_Malik.run from the desktop!\" '\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$desktop"
 chmod +x "$desktop"
 
 # make desktop app loader for users who cant load games through the website.
@@ -326,14 +336,14 @@ echo "${Red}This Linux distro is not supported sorry. Now aborting.${Reset}"
 exit
 fi
 
-		WINE_NAME="lutris-GE-Proton8-17-x86_64"
-		WINE_URL="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton8-17/wine-lutris-GE-Proton8-17-x86_64.tar.xz"
-		WINE_MD5="351b8e823a969fc14025c4048bc64807"
+		WINE_NAME="lutris-GE-Proton8-18-x86_64"
+		WINE_URL="https://api.onedrive.com/v1.0/shares/s!AqNZGNosZPHPhmUjN1kGL3TXYATq/root/content"
+		WINE_MD5="5d613c73e4aca1e4ec840818d37ea5f7"
 		WINE_RUN="$HOME/.wine-roblox-malik/$STUDIO_WINE_NAME/bin/wine"
 
-		STUDIO_WINE_NAME="lutris-GE-Proton8-17-x86_64"
-		STUDIO_WINE_URL="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton8-17/wine-lutris-GE-Proton8-17-x86_64.tar.xz"
-		STUDIO_WINE_MD5="351b8e823a969fc14025c4048bc64807"
+		STUDIO_WINE_NAME="lutris-GE-Proton8-18-x86_64"
+		STUDIO_WINE_URL="https://api.onedrive.com/v1.0/shares/s!AqNZGNosZPHPhmUjN1kGL3TXYATq/root/content"
+		STUDIO_WINE_MD5="5d613c73e4aca1e4ec840818d37ea5f7"
 		STUDIO_WINE_RUN="$HOME/.wine-roblox-malik/$STUDIO_WINE_NAME/bin/wine"
 
 PS3='Please make a selection:'
