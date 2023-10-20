@@ -186,7 +186,7 @@ then
 		echo -e "${Red}Error setup failed to install Roblox please uninstall and install again!${Reset}"
 		main_menu
 	fi
-	find $(xdg-user-dir DESKTOP) -name "*Roblox*" -not -name "*Malik*" -name "*.ink" -delete
+	find $(xdg-user-dir DESKTOP) -name "*Roblox*" -not -name "*Malik*" -name "*.lnk" -delete
 	wget https://i.postimg.cc/63pLwnmf/Roblox-Player-Launcher.png -O "$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png"
 	wget https://i.postimg.cc/d1NR0DMP/Roblox-Studio-Beta.png -O "$HOME/.wine-roblox-malik/Roblox-Studio-Beta.png"
 	echo " "
@@ -194,11 +194,11 @@ fi
 
 # make desktop entry for roblox player.
 desktop="$HOME/.local/share/applications/roblox-malik.desktop"
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-player-malik\nExec=bash -c '	find "$(xdg-user-dir DESKTOP)" -name \"*Roblox*\" -not -name \"*Malik*\" -delete && dir=\"\$(find \"$HOME/.wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions\" -name \"RobloxPlayerLauncher.exe\" -not -path \"*/Temp/*\" -exec dirname {} \";\" )\" && echo -e \"#!/bin/bash\\\n cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$dir\\\" \\\n export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" \\\n export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" \\\n export WINEESYNC=1 \\\n export WINEFSYNC=1 \\\n \\\"$WINE_RUN\\\" \\\"\$dir/RobloxPlayerLauncher.exe\\\" %U \\\n rm Run_RobloxGame_Malik.run \" > \"$(xdg-user-dir DESKTOP)/Run_RobloxGame_Malik.run\" && chmod +x \"$(xdg-user-dir DESKTOP)/Run_RobloxGame_Malik.run\" && zenity --info --text=\"Now launch Run_RobloxGame_Malik.run from the desktop!\" '\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-player-malik\nExec=bash -c \" find \\\"$(xdg-user-dir DESKTOP)\\\" -name \\\"*Roblox*\\\" -not -name \\\"*Malik*\\\" -name \\\"*.desktop\\\" -name \\\"*.lnk\\\" -delete  && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U\"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$desktop"
 chmod +x "$desktop"
 
 # make desktop app loader for users who cant load games through the website.
-echo -e "[Desktop Entry]\nVersion=1.0\nName=Roblox App Malik\nExec=bash -c \" find \\\"$(xdg-user-dir DESKTOP)\\\" -name \\\"*Roblox*\\\" -not -name \\\"*Malik*\\\" -delete  && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" -app\"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$(xdg-user-dir DESKTOP)/Roblox App Malik.desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=Roblox App Malik\nExec=bash -c \" find \\\"$(xdg-user-dir DESKTOP)\\\" -name \\\"*Roblox*\\\" -not -name \\\"*Malik*\\\" -name \\\"*.desktop\\\" -name \\\"*.lnk\\\" -delete  && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" -app\"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$(xdg-user-dir DESKTOP)/Roblox App Malik.desktop"
 chmod +x "$(xdg-user-dir DESKTOP)/Roblox App Malik.desktop"
 
 #set and update fflag settings
@@ -282,7 +282,7 @@ fi
 
 clear
 # let user know their system has just been pimped :)
-echo -e "${Green}Setup complete. When you lauch a game from the website, You will then need to launch \"Run_RobloxGame_Malik.run\" from your desktop.${Reset}"
+echo -e "${Green}Setup complete. Launch a game from the website then you will be logged into the app.${Reset}"
 main_menu
 
 }
@@ -401,7 +401,7 @@ chmod +x "$HOME/.local/share/applications/roblox-studio-auth-malik.desktop"
 
 #install studio
 WINEPREFIX="$HOME/.wine-roblox-malik" WINEDEBUG=-all WINEESYNC=1 WINEFSYNC=1 $STUDIO_WINE_RUN "$HOME/.wine-roblox-malik/drive_c/Program Files (x86)/Roblox/Versions/RobloxStudioLauncherBeta.exe"
-find $(xdg-user-dir DESKTOP) -name "*Roblox*" -not -name "*Malik*" -name "*.ink" -delete
+find $(xdg-user-dir DESKTOP) -name "*Roblox*" -not -name "*Malik*" -name "*.lnk" -delete
 
 echo -e "[Desktop Entry]\nVersion=1.0\nName=Roblox Studio Malik\nExec=bash -c \" zenity --info --text=\\\"Login to Roblox Player App for Studio to work!\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$STUDIO_WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxStudioBeta.exe' -not -path '*/Temp/*') \\\" -ide \"\nIcon=$HOME/.wine-roblox-malik/Roblox-Studio-Beta.png\nMimeType=x-scheme-handler/roblox-studio;application/x-roblox-rbxl;application/x-roblox-rbxlx\nType=Application\n" > "$(xdg-user-dir DESKTOP)/Roblox Studio Malik.desktop"
 chmod +x "$(xdg-user-dir DESKTOP)/Roblox Studio Malik.desktop"
@@ -417,7 +417,7 @@ main_menu
 
         "$(tput bold setaf 4)Uninstall Roblox$(tput sgr0)")
 
-find "$(xdg-user-dir DESKTOP)" -name "*Roblox*" -name "*.ink" -name "*.desktop" -delete
+find "$(xdg-user-dir DESKTOP)" -name "*Roblox*" -name "*.lnk" -name "*.desktop" -delete
 
 if [ -f "$HOME/.local/share/applications/mimeinfo.cache" ];
 then
