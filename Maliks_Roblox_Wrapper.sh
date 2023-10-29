@@ -194,12 +194,12 @@ fi
 
 # make desktop entry for roblox player.
 desktop="$HOME/.local/share/applications/roblox-malik.desktop"
-echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-player-malik\nExec=bash -c \" find \\\"$(xdg-user-dir DESKTOP)\\\" -name \\\"*Roblox*\\\" -not -name \\\"*Malik*\\\" -name \\\"*.desktop\\\" -name \\\"*.lnk\\\" -delete  && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" %U\"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$desktop"
+echo -e "[Desktop Entry]\nVersion=1.0\nName=roblox-player-malik\nExec=bash -c \" find \\\"$(xdg-user-dir DESKTOP)\\\" -name \\\"*Roblox*\\\" -not -name \\\"*Malik*\\\" -name \\\"*.lnk\\\" -delete  && find \\\"$(xdg-user-dir DESKTOP)\\\" -name \\\"*Roblox*\\\" -not -name \\\"*Malik*\\\" -name \\\"*.desktop\\\" -delete && cd \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerBeta.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"./\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"./RobloxPlayerLauncher.exe\\\" %Uzavatarteam2\"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$desktop"
 chmod +x "$desktop"
 
 # make desktop app loader for users who cant load games through the website.
-echo -e "[Desktop Entry]\nVersion=1.0\nName=Roblox App Malik\nExec=bash -c \" find \\\"$(xdg-user-dir DESKTOP)\\\" -name \\\"*Roblox*\\\" -not -name \\\"*Malik*\\\" -name \\\"*.desktop\\\" -name \\\"*.lnk\\\" -delete  && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" -app\"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$(xdg-user-dir DESKTOP)/Roblox App Malik.desktop"
-chmod +x "$(xdg-user-dir DESKTOP)/Roblox App Malik.desktop"
+# echo -e "[Desktop Entry]\nVersion=1.0\nName=Roblox App Malik\nExec=bash -c \" find \\\"$(xdg-user-dir DESKTOP)\\\" -name \\\"*Roblox*\\\" -not -name \\\"*Malik*\\\" -name \\\"*.desktop\\\" -name \\\"*.lnk\\\" -delete  && cp -r \\\"$HOME/.wine-roblox-malik/ClientSettings\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*' -exec dirname {} ';' )\\\" && export MESA_GL_VERSION_OVERRIDE=\\\"4.4\\\" && export WINEPREFIX=\\\"$HOME/.wine-roblox-malik\\\" && export WINEESYNC=1 && export WINEFSYNC=1 && \\\"$WINE_RUN\\\" \\\"\$(find \\\"$HOME/.wine-roblox-malik/drive_c\\\" -name 'RobloxPlayerLauncher.exe' -not -path '*/Temp/*')\\\" -app -channel \\\"zAvatarTeam\\\" \"\nType=Application\nIcon=$HOME/.wine-roblox-malik/Roblox-Player-Launcher.png\nTerminal=false\n" > "$(xdg-user-dir DESKTOP)/Roblox App Malik.desktop"
+# chmod +x "$(xdg-user-dir DESKTOP)/Roblox App Malik.desktop"
 
 #set and update fflag settings
 PS3="Please select Graphics API (OpenGL Recommended):"
@@ -417,7 +417,8 @@ main_menu
 
         "$(tput bold setaf 4)Uninstall Roblox$(tput sgr0)")
 
-find "$(xdg-user-dir DESKTOP)" -name "*Roblox*" -name "*.lnk" -name "*.desktop" -delete
+find "$(xdg-user-dir DESKTOP)" -name "*Roblox*" -name "*.lnk" -delete
+find "$(xdg-user-dir DESKTOP)" -name "*Roblox*" -name "*.desktop" -delete
 
 if [ -f "$HOME/.local/share/applications/mimeinfo.cache" ];
 then
