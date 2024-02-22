@@ -176,7 +176,6 @@ then
 	wget -O "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe" https://setup.rbxcdn.com/RobloxPlayerLauncher.exe
 
 	$WINE_RUN "$HOME/.wine-roblox-malik/RobloxPlayerLauncher.exe"
-
 	clear
 	echo -e "${Yellow}When setup has completed, press return to key to continue.${Reset}"
 	read -p " "
@@ -322,12 +321,15 @@ distro_check="zypper search -i"
 distro_install="zypper install"
 fi
 
-which pacman >/dev/null 2>&1
-if [ $? -eq 0 ]
+if [ ! $distro_guess ]
 then
-distro_guess="Arch"
-distro_check="pacman -Qs"
-distro_install="pacman -S"
+		which pacman >/dev/null 2>&1
+		if [ $? -eq 0 ]
+		then
+		distro_guess="Arch"
+		distro_check="pacman -Qs"
+		distro_install="pacman -S"
+		fi
 fi
 
 if test -z $distro_guess;
@@ -336,14 +338,14 @@ echo "${Red}This Linux distro is not supported sorry. Now aborting.${Reset}"
 exit
 fi
 
-		WINE_NAME="lutris-GE-Proton8-18-x86_64"
-		WINE_URL="https://api.onedrive.com/v1.0/shares/s!AqNZGNosZPHPhmUjN1kGL3TXYATq/root/content"
-		WINE_MD5="5d613c73e4aca1e4ec840818d37ea5f7"
-		WINE_RUN="$HOME/.wine-roblox-malik/$STUDIO_WINE_NAME/bin/wine"
+		WINE_NAME="lutris-GE-Proton8-26-x86_64"
+		WINE_URL="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton8-26/wine-lutris-GE-Proton8-26-x86_64.tar.xz"
+		WINE_MD5="309fb4d79e6467719345c293c8aa482c"
+		WINE_RUN="$HOME/.wine-roblox-malik/$WINE_NAME/bin/wine"
 
-		STUDIO_WINE_NAME="lutris-GE-Proton8-18-x86_64"
-		STUDIO_WINE_URL="https://api.onedrive.com/v1.0/shares/s!AqNZGNosZPHPhmUjN1kGL3TXYATq/root/content"
-		STUDIO_WINE_MD5="5d613c73e4aca1e4ec840818d37ea5f7"
+		STUDIO_WINE_NAME="lutris-GE-Proton8-26-x86_64"
+		STUDIO_WINE_URL="https://github.com/GloriousEggroll/wine-ge-custom/releases/download/GE-Proton8-26/wine-lutris-GE-Proton8-26-x86_64.tar.xz"
+		STUDIO_WINE_MD5="309fb4d79e6467719345c293c8aa482c"
 		STUDIO_WINE_RUN="$HOME/.wine-roblox-malik/$STUDIO_WINE_NAME/bin/wine"
 
 PS3='Please make a selection:'
